@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Production builds
+client/dist/
+server/dist/
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary and local upload files
+*.part
+.tmp/
+tmp/
+
+# Test and tool caches
+.cache/
+coverage/
+.vite/
+
+# Editor and OS files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local runtime files
+*.pid
