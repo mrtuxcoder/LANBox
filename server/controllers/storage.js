@@ -60,8 +60,15 @@ function cleanFileName(filename) {
     throw new Error("Invalid filename");
   }
 
-  let name = path.basename(filename).replace(/\0/g, "");
-  name = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, "_").trim();
+  const invalidFileNameCharacters = '<>:"/\\|?*';
+  let name = [...path.basename(filename)]
+    .map((character) => (
+      character.charCodeAt(0) <= 0x1F || invalidFileNameCharacters.includes(character)
+        ? "_"
+        : character
+    ))
+    .join("")
+    .trim();
 
   if (!name || name === "." || name === "..") {
     throw new Error("Invalid filename");
@@ -90,7 +97,9 @@ function isMediaFile(filename) {
 
 function isSupportedFile(filename) {
   const extension = path.extname(filename).toLowerCase();
-  return extension.length > 1 && !/[\0\x00-\x1F]/.test(extension);
+  return extension.length > 1 && [...extension].every(
+    (character) => character.charCodeAt(0) > 0x1F
+  );
 }
 
 function getImageContentType(filename) {

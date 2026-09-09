@@ -224,9 +224,17 @@ function App() {
 
   // Initial load only.
   useEffect(() => {
-    loadFiles("");
+    let cancelled = false;
+
+    queueMicrotask(() => {
+      if (!cancelled) {
+        void loadFiles("");
+      }
+    });
 
     return () => {
+      cancelled = true;
+
       if (errorTimerRef.current) {
         clearTimeout(errorTimerRef.current);
       }
@@ -440,14 +448,6 @@ function App() {
   // =========================================================
   // Selection
   // =========================================================
-
-  function toggleImageSelection(event, image) {
-    event.stopPropagation();
-
-    if (!image?.path) return;
-
-    selectImage(image);
-  }
 
   function selectImage(image) {
     if (!image?.path) return;
@@ -912,12 +912,13 @@ function App() {
 
         xhr.onload = () => {
           activeUploadRequestRef.current.delete(xhr);
-          let response = {};
-          try {
-            response = JSON.parse(xhr.responseText || "{}");
-          } catch {
-            response = {};
-          }
+          const response = (() => {
+            try {
+              return JSON.parse(xhr.responseText || "{}");
+            } catch {
+              return {};
+            }
+          })();
 
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(response);

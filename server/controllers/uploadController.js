@@ -19,7 +19,7 @@ const {
 const MAX_CHUNK_SIZE = 16 * 1024 * 1024;
 
 async function uploadPhotoChunk(req, res) {
-  let temporaryPath = null;
+  let temporaryPath;
   let fileHandle = null;
 
   try {
@@ -138,7 +138,6 @@ async function uploadPhoto(req, res) {
   let tempPath = null;
   let writeStream = null;
   let requestAborted = false;
-  let receivedBytes = 0;
 
   try {
     console.log("\n=== PHOTO UPLOAD REQUEST ===");
@@ -185,10 +184,6 @@ async function uploadPhoto(req, res) {
     });
 
     writeStream = fs.createWriteStream(tempPath, { flags: "wx" });
-    req.on("data", (chunk) => {
-      receivedBytes += chunk.length;
-    });
-
     await new Promise((resolve, reject) => {
       let settled = false;
       const finish = (error) => {

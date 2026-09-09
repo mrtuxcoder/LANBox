@@ -8,9 +8,9 @@ services:
     networks:
       - lanbox-network
     volumes:
-      - "${LANBOX_STORAGE_DIR:-/home/mrtuxcoder/lanbox}:/app/storage"
-    # Match these IDs to the owner of /home/mrtuxcoder/lanbox on the host.
-    user: "${PUID:-1000}:${PGID:-1000}"
+      - "${STORAGE_PATH}:/app/storage"
+    # Match these IDs to the owner of ${STORAGE_PATH} on the host.
+    user: "${PUID}:${PGID}"
 
 
   frontend:

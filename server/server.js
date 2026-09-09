@@ -1,32 +1,11 @@
-const express = require("express");
-const cors = require("cors");
 const os = require("os");
 const qrcode = require("qrcode-terminal");
-require("dotenv").config();
-
-const app = express();
+const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+const app = require("./app");
 
 const PORT = Number(process.env.PORT) || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-app.get("/health", (req, res) => {
-  res.json({
-    name: "LANBox",
-    message: "LANBox server is running",
-  });
-});
-
-app.use(
-  "/api",
-  require("./routes/api")
-);
 
 function getLocalIPAddress() {
   const interfaces =

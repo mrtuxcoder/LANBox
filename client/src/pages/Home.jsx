@@ -56,7 +56,17 @@ function Home() {
   }
 
   useEffect(() => {
-    loadFiles("");
+    let cancelled = false;
+
+    queueMicrotask(() => {
+      if (!cancelled) {
+        void loadFiles("");
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ==========================================
@@ -169,15 +179,13 @@ function Home() {
         return;
       }
 
-      let response = {};
-
-      try {
-        response = JSON.parse(
-          xhr.responseText || "{}"
-        );
-      } catch {
-        response = {};
-      }
+      const response = (() => {
+        try {
+          return JSON.parse(xhr.responseText || "{}");
+        } catch {
+          return {};
+        }
+      })();
 
       setUploadError(
         response.error ||
