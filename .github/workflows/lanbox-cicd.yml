@@ -46,8 +46,6 @@ jobs:
     name: Test server
     needs: lint
     runs-on: ubuntu-latest
-    env:
-      STORAGE_PATH: ${{ runner.temp }}/lanbox-test-uploads
 
     steps:
       - name: Checkout Repository
@@ -65,9 +63,8 @@ jobs:
         working-directory: server
         run: npm ci
 
-      - name: Create test storage directory
-        run: mkdir -p "$STORAGE_PATH"
-
       - name: Run server tests
         working-directory: server
-        run: npm test
+        run: |
+          mkdir -p /tmp/lanbox-test-uploads
+          STORAGE_PATH=/tmp/lanbox-test-uploads npm test
