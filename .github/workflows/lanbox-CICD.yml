@@ -16,7 +16,7 @@ env:
 
 jobs:
   lint:
-    name: Lint Backend and Frontend
+    name: Lint server and client
     runs-on: ubuntu-latest
 
     steps:
@@ -32,24 +32,24 @@ jobs:
                 client/package-lock.json
                 server/package-lock.json
 
-      - name: Install Frontend dependencies
+      - name: Install client dependencies
         working-directory: client
         run: npm ci
 
-      - name: Install Backend dependencies
+      - name: Install server dependencies
         working-directory: server
         run: npm ci
 
-      - name: Lint Frontend
+      - name: Lint client
         working-directory: client
         run: npm run lint
 
-      - name: Lint Backend
+      - name: Lint server
         working-directory: server
         run: npm run lint
 
   test:
-    name: Test Backend
+    name: Test server
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -61,14 +61,14 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: |
-            frontend/package-lock.json
-            backend/package-lock.json
+            client/package-lock.json
+            server/package-lock.json
 
-      - name: Install backend dependencies
+      - name: Install server dependencies
         working-directory: server
         run: npm ci
 
-      - name: Run backend tests
+      - name: Run server tests
         working-directory: server
         run: npm test
         
