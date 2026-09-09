@@ -8,12 +8,6 @@ permissions:
   contents: read
   packages: write
 
-env:
-  PORT_BACKEND: ${{ secrets.PORT }}
-  PUID: ${{ secrets.PUID }}
-  PGID: ${{ secrets.PGID }}
-  STORAGE_PATH: ${{ secrets.STORAGE_PATH }}
-
 jobs:
   lint:
     name: Lint server and client
@@ -52,6 +46,9 @@ jobs:
     name: Test server
     needs: lint
     runs-on: ubuntu-latest
+    env:
+      STORAGE_PATH: ${{ runner.temp }}/lanbox-test-uploads
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -68,9 +65,8 @@ jobs:
         working-directory: server
         run: npm ci
 
-      - name: Fix permissions
-        run: chmod -R 777 ${{ github.workspace }}
-
+      - name: Create test storage directory
+        run: mkdir -p "$STORAGE_PATH"
 
       - name: Run server tests
         working-directory: server
