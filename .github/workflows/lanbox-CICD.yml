@@ -68,6 +68,10 @@ jobs:
         working-directory: server
         run: npm ci
 
+      - name: Fix permissions
+        run: chmod -R 777 ${{ github.workspace }}
+
+
       - name: Run server tests
         working-directory: server
         run: npm test
