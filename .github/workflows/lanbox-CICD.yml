@@ -65,11 +65,11 @@ jobs:
             backend/package-lock.json
 
       - name: Install backend dependencies
-        working-directory: backend
+        working-directory: server
         run: npm ci
 
       - name: Run backend tests
-        working-directory: backend
+        working-directory: server
         run: npm test
         
 
