@@ -1,0 +1,31 @@
+services:
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    container_name: backend-api
+    networks:
+      - lanbox-network
+    volumes:
+      - "${LANBOX_STORAGE_DIR:-/home/mrtuxcoder/lanbox}:/app/storage"
+    # Match these IDs to the owner of /home/mrtuxcoder/lanbox on the host.
+    user: "${PUID:-1000}:${PGID:-1000}"
+
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    container_name: frontend-app
+    networks:
+      - lanbox-network
+    ports:
+      - "80:80"
+
+
+networks:
+  lanbox-network:
+    driver: bridge
+
+  

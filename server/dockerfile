@@ -1,0 +1,18 @@
+FROM node:24-alpine
+
+WORKDIR /app
+
+COPY package*.json .
+RUN npm ci --omit=dev
+
+COPY --chown=node:node . .
+
+# Keep the image safe when it is run without the bind mount from Compose.
+RUN mkdir -p /app/storage && chown -R node:node /app
+
+# Do not run the application process as root.
+USER node
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
