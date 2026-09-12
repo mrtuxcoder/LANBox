@@ -115,7 +115,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
@@ -147,12 +147,6 @@ jobs:
           VM_USER: ${{ secrets.VM_USER }}
           VM_HOST: ${{ secrets.VM_HOST }}
         run: |
-
-          ssh \
-            -o StrictHostKeyChecking=no \
-            -i private_key.pem \
-            "$VM_USER@$VM_HOST" \
-            "mkdir -p /opt/lanbox"  # Create the directory on the remote host if it doesn't exist
 
           rsync -avz \
             -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" \
