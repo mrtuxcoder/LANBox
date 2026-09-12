@@ -107,3 +107,81 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/lanbox-client:${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/lanbox-client:latest
 
+  deploy:
+    name: Deploy to homelab
+    needs: docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create SSH key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Test SSH connection
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i private_key.pem \
+            "$VM_USER@$VM_HOST" \
+            "echo Connected! && hostname"
+
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+
+      - name: Copy docker-compose.yml to remote host
+        run: |
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i private_key.pem \
+            "$VM_USER@$VM_HOST" \
+            "mkdir -p /opt/lanbox"  # Create the directory on the remote host if it doesn't exist
+
+          rsync -avz \
+            -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" \
+            docker-compose.yml \
+            "$VM_USER@$VM_HOST:/opt/lanbox/docker-compose.yml"     # Copy the docker-compose.yml file to the remote host
+        
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+
+      - name: Pull Docker images
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i private_key.pem \
+            "$VM_USER@$VM_HOST" \
+            "cd /opt/lanbox && docker compose pull"
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+
+      - name: Start application
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i private_key.pem \
+            "$VM_USER@$VM_HOST" \
+            "cd /opt/lanbox && docker compose up -d --remove-orphans"
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+
+      - name: Verify deployment
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i private_key.pem \
+            "$VM_USER@$VM_HOST" \
+            "cd /opt/lanbox && docker compose ps"
+        env:
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_HOST: ${{ secrets.VM_HOST }}
