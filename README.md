@@ -13,25 +13,25 @@ accessible to connected devices over the local network.
 
 ## Features
 
--   Local, private cloud-style file storage
--   Access the same shared storage from multiple devices on the same
-    network
--   Upload multiple files with resumable 8 MB chunks
--   Upload images, videos, and files with a valid extension
--   Upload files up to 5 GB each
--   Upload up to 50 files with a maximum batch size of 5 GB
--   Retry interrupted upload chunks
--   Display upload progress, active filenames, and transfer speed
--   Browse files by Images, Videos, Music, Documents, and Others
--   Preview supported images and videos
--   Download one file directly
--   Download multiple files normally or as a ZIP archive
--   Create, rename, and delete folders and files
--   Use grid or list views
--   Sort files by name, date, or size
--   Configure the server's storage location using `.env`
--   Access LANBox from phones, laptops, tablets, and other devices
-    connected to the same network
+- Local, private cloud-style file storage
+- Access the same shared storage from multiple devices on the same
+  network
+- Upload multiple files with resumable 8 MB chunks
+- Upload images, videos, and files with a valid extension
+- Upload files up to 5 GB each
+- Upload up to 50 files with a maximum batch size of 5 GB
+- Retry interrupted upload chunks
+- Display upload progress, active filenames, and transfer speed
+- Browse files by Images, Videos, Music, Documents, and Others
+- Preview supported images and videos
+- Download one file directly
+- Download multiple files normally or as a ZIP archive
+- Create, rename, and delete folders and files
+- Use grid or list views
+- Sort files by name, date, or size
+- Configure the server's storage location using `.env`
+- Access LANBox from phones, laptops, tablets, and other devices
+  connected to the same network
 
 ## How LANBox Works
 
@@ -40,13 +40,13 @@ LANBox runs as **two Docker containers**:
 - **Frontend** — provides the web interface.
 - **Backend** — handles file storage and API operations.
 
-Only **port 80** is exposed outside Docker. You access LANBox from another device using the server's local IP address:
+Only **port 80** is exposed outside Docker.
 
-```text
-http://SERVER-IP
-```
+LANBox is accessed through the IP address of the computer running the
+LANBox server.
 
-All files are stored on the LANBox server and can be accessed by devices connected to the same local network.
+All files are stored on the LANBox server and can be accessed by devices
+connected to the same local network.
 
 ## Requirements
 
@@ -57,14 +57,14 @@ All files are stored on the LANBox server and can be accessed by devices connect
 
 ## Project Structure
 
-``` text
+```text
 LANBox/
 ├── client/                 React and Vite frontend
 │   └── src/
 └── server/                 Express backend
     ├── controllers/        API controllers and storage helpers
     ├── routes/              API route registration
-    ├── .env                Local server configuration
+    ├── .env                 Local server configuration
     └── server.js            Server entry point
 ```
 
@@ -88,7 +88,8 @@ STORAGE_PATH=/home/username
 
 `STORAGE_PATH` controls where LANBox stores files.
 
-You can edit `/opt/lanbox/.env` and change `STORAGE_PATH` to a specific directory:
+You can edit `/opt/lanbox/.env` and change `STORAGE_PATH` to a specific
+directory:
 
 ```env
 PUID=1000
@@ -108,72 +109,62 @@ sudo docker compose up -d
 
 ## Installation
 
-LANBox is installed using the included `install.sh` script.
-
-### 1. Install Docker
-
-Docker must be installed **before** running the LANBox installer.
-
-The installer does not install Docker.
-
-Follow Docker's official installation guide for your Linux distribution:
-
-- [Docker Engine installation guide](https://docs.docker.com/engine/install/)
-- [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-- [Fedora](https://docs.docker.com/engine/install/fedora/)
-
-Verify Docker:
+Install LANBox with a single command:
 
 ```bash
-sudo docker --version
-sudo docker compose version
-```
-
-### 2. Download LANBox
-
-```bash
-git clone https://github.com/mrtuxcoder/LANBox.git
-cd LANBox
-```
-
-### 3. Run the installer
-
-```bash
-chmod +x install.sh
-sudo ./install.sh
+curl -fsSL https://raw.githubusercontent.com/mrtuxcoder/LANBox/refs/heads/main/install.sh | sudo bash
 ```
 
 The installer will:
 
 1. Check that Docker is installed.
-2. Enable and start Docker.
+2. Enable and start Docker if required.
 3. Check Docker Compose.
 4. Create `/opt/lanbox`.
-5. Create the `.env` file with the current user's UID, GID, and home directory.
+5. Create the `.env` configuration.
 6. Download the LANBox Docker configuration.
 7. Pull the LANBox images.
-8. Start the two LANBox containers.
-9. Display the local IP address to use for accessing LANBox.
+8. Start the LANBox containers.
+9. Display the address for accessing LANBox.
 
-### 4. Access LANBox
+## Access LANBox
 
-After installation, the script displays an address such as:
+LANBox is accessed using the **IP address of the laptop or computer
+running the LANBox server**.
 
-```text
-http://192.168.1.50
-```
-
-Open that address from any phone, laptop, tablet, or other device connected to the **same local network**.
-
-To find the server's IP address manually:
+On the server computer, run:
 
 ```bash
 ip addr
 ```
 
+Look for the local network IPv4 address of the active network interface.
+
+For example:
+
+```text
+192.168.1.50
+```
+
+Then, from another device connected to the **same local network**, open:
+
+```text
+http://192.168.1.50
+```
+
+Replace `192.168.1.50` with the IP address of your LANBox server.
+
+You can access LANBox from:
+
+- Phones
+- Laptops
+- Tablets
+- Desktop computers
+- Other devices connected to the same local network
+
 Only port **80** needs to be accessed from the local network.
 
-### Installation files
+## Installation Files
 
 The installer stores the deployment files in:
 
@@ -196,7 +187,7 @@ sudo docker compose down
 
 Suppose your laptop is running the LANBox server and has this storage:
 
-``` text
+```text
 LANBox Storage/
 ├── Photos/
 │   ├── vacation.jpg
@@ -209,7 +200,7 @@ LANBox Storage/
 
 A phone connected to the same Wi-Fi can open LANBox and see:
 
-``` text
+```text
 Photos
 Documents
 Videos
@@ -217,12 +208,12 @@ Videos
 
 The phone can then:
 
--   Upload new files
--   Download existing files
--   Create folders
--   Rename files and folders
--   Delete files and folders
--   Preview supported images and videos
+- Upload new files
+- Download existing files
+- Create folders
+- Rename files and folders
+- Delete files and folders
+- Preview supported images and videos
 
 If another laptop connects to the same LANBox server, it sees the **same
 files and folders**.
@@ -232,11 +223,11 @@ for each client.
 
 ## Transfer Limits
 
--   Maximum single file size: 5 GB
--   Maximum multiple-file count: 50
--   Maximum multiple-file total size: 5 GB
--   Maximum resumable chunk size: 16 MB
--   Client upload chunk size: 8 MB
+- Maximum single file size: 5 GB
+- Maximum multiple-file count: 50
+- Maximum multiple-file total size: 5 GB
+- Maximum resumable chunk size: 16 MB
+- Client upload chunk size: 8 MB
 
 Keep the browser page open during uploads.
 
@@ -245,14 +236,14 @@ resumable upload can continue from the last completed chunk.
 
 ## Security Notes
 
--   All requested paths are resolved beneath `STORAGE_PATH`
--   Paths outside the configured storage directory are rejected
--   Uploaded names are cleaned before writing to disk
--   Only files with a valid extension are accepted for upload and
-    download
--   LANBox is intended for use on trusted local networks
--   Add authentication and HTTPS before exposing LANBox beyond a private
-    LAN
+- All requested paths are resolved beneath `STORAGE_PATH`
+- Paths outside the configured storage directory are rejected
+- Uploaded names are cleaned before writing to disk
+- Only files with a valid extension are accepted for upload and
+  download
+- LANBox is intended for use on trusted local networks
+- Add authentication and HTTPS before exposing LANBox beyond a private
+  LAN
 
 ## Summary
 
